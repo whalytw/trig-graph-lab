@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="高中數學：三角函數圖形互動教學工具。操作正弦、餘弦、正切函數，理解振幅、週期、平移、伸縮、單位圓與交點。" />
+  <title>三角函數圖形互動實驗室</title>
+  <style>
+    :root{
+      --bg:#f5f8fb; --panel:#ffffff; --ink:#17324d; --muted:#62778b;
+      --line:#d9e3ec; --accent:#0f6f83; --accent2:#e38736; --good:#177a4c;
+      --bad:#b43b3b; --soft:#eaf5f7; --soft2:#fff5e9; --shadow:0 8px 24px rgba(21,50,77,.08);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .topbar{background:linear-gradient(115deg,#0e5c70,#173d67);color:white;padding:28px 20px 24px}
+    .wrap{max-width:1180px;margin:auto;padding:0 18px}
+    .hero{display:grid;grid-template-columns:1.6fr .8fr;gap:24px;align-items:center}
+    h1{font-size:clamp(28px,4vw,46px);margin:0 0 8px;letter-spacing:.03em}
+    .hero p{margin:0;color:#dcecf2}
+    .hero-badge{justify-self:end;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:18px;padding:16px 18px;min-width:230px}
+    .hero-badge strong{display:block;font-size:20px}
+    nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+    .navrow{display:flex;gap:8px;overflow:auto;padding:9px 18px;max-width:1180px;margin:auto}
+    nav a{white-space:nowrap;text-decoration:none;color:var(--ink);padding:8px 12px;border-radius:10px;font-weight:700;font-size:14px}
+    nav a:hover,nav a:focus{background:var(--soft)}
+    main{padding:22px 0 40px}
+    section{scroll-margin-top:72px;margin:0 0 22px}
+    .section-title{display:flex;align-items:baseline;gap:10px;margin:0 0 12px}
+    .section-title h2{font-size:24px;margin:0}
+    .section-title span{color:var(--muted);font-size:14px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px}
+    .grid2{display:grid;grid-template-columns:minmax(290px,.9fr) minmax(0,1.7fr);gap:16px}
+    .grid2even{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .controls{display:grid;gap:14px}
+    .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#edf3f7;padding:5px;border-radius:12px}
+    .seg button{border:0;background:transparent;padding:9px 6px;border-radius:9px;color:var(--ink);font-weight:800}
+    .seg button.active{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);color:var(--accent)}
+    .control{border-top:1px solid var(--line);padding-top:11px}
+    .control:first-of-type{border-top:0}
+    .control label{display:flex;justify-content:space-between;gap:10px;font-weight:700}
+    .control output{color:var(--accent);font-variant-numeric:tabular-nums}
+    input[type=range]{width:100%;accent-color:var(--accent)}
+    select,.selectlike{width:100%;border:1px solid #b9c9d6;border-radius:10px;padding:9px 10px;background:white;color:var(--ink)}
+    .formula{background:#122e49;color:white;border-radius:14px;padding:12px 14px;font-size:20px;text-align:center;overflow-wrap:anywhere}
+    .formula small{display:block;font-size:12px;color:#bcd1df;margin-top:3px}
+    .props{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .prop{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fbfdfe}
+    .prop b{display:block;font-size:12px;color:var(--muted)}
+    .prop span{font-weight:800}
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+    .btn{border:1px solid #b8c7d3;background:white;color:var(--ink);border-radius:10px;padding:8px 11px;font-weight:750}
+    .btn:hover{border-color:var(--accent);color:var(--accent)}
+    .btn.primary{background:var(--accent);color:white;border-color:var(--accent)}
+    .btn.warn{background:var(--soft2);border-color:#f0c894}
+    .canvasbox{border:1px solid var(--line);border-radius:14px;background:white;overflow:hidden}
+    canvas{display:block;width:100%;height:auto}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:13px;margin-top:8px}
+    .dot{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:5px;border-radius:2px}
+    .learnnote{background:var(--soft);border-left:4px solid var(--accent);padding:11px 13px;border-radius:8px;margin-top:12px}
+    .steps{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+    .stepbtn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 11px}
+    .stepbtn.active{background:var(--accent);color:white;border-color:var(--accent)}
+    .readout{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .readout .cell{text-align:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fbfdfe}
+    .readout strong{display:block;font-size:19px}
+    .angle-controls{display:grid;grid-template-columns:1fr 170px;gap:10px;align-items:end;margin-top:10px}
+    .pillrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+    .pill{border:1px solid var(--line);background:white;border-radius:999px;padding:6px 10px}
+    .pill:hover{border-color:var(--accent)}
+    .mini-title{font-weight:800;margin:0 0 7px}
+    .quizq{padding:13px 0;border-bottom:1px solid var(--line)}
+    .quizq:last-child{border-bottom:0}
+    .options{display:grid;gap:6px;margin-top:8px}
+    .options label{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}
+    .options label:has(input:checked){border-color:var(--accent);background:var(--soft)}
+    .feedback{margin-top:7px;font-weight:800}
+    .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+    .applications{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .appcard{border:1px solid var(--line);border-radius:14px;padding:13px}
+    .appcard h3{margin:0 0 5px;font-size:18px}
+    .footer{color:var(--muted);text-align:center;padding:18px 0;font-size:13px}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    code{background:#eef3f6;padding:.1em .35em;border-radius:5px}
+    @media (max-width:850px){
+      .hero{grid-template-columns:1fr}.hero-badge{justify-self:start}
+      .grid2,.grid2even,.applications{grid-template-columns:1fr}
+    }
+    @media (max-width:560px){
+      .wrap{padding:0 11px}.card{padding:13px;border-radius:14px}
+      .props,.readout{grid-template-columns:1fr 1fr}
+      .angle-controls{grid-template-columns:1fr}
+      .hero-badge{min-width:0;width:100%}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap hero">
+      <div>
+        <h1>三角函數圖形互動實驗室</h1>
+        <p>拖曳參數、觀察單位圓、比較圖形與交點，把「振幅、週期、平移、伸縮」變成看得見的變化。</p>
+      </div>
+      <div class="hero-badge">
+        <strong>適用：高中數學</strong>
+        <span>sin / cos / tan · 圖形變換 · 單位圓 · 方程式交點</span>
+      </div>
+    </div>
+  </header>
+
+  <nav aria-label="頁面導覽">
+    <div class="navrow">
+      <a href="#lab">圖形實驗室</a>
+      <a href="#transform">變換拆解</a>
+      <a href="#circle">單位圓連動</a>
+      <a href="#intersection">交點與方程式</a>
+      <a href="#quiz">自我檢核</a>
+      <a href="#teacher">教學提示</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section id="lab">
+      <div class="section-title"><h2>1. 圖形實驗室</h2><span>先動手，再看規律</span></div>
+      <div class="card grid2">
+        <div class="controls">
+          <div>
+            <div class="mini-title">選擇基本函數</div>
+            <div class="seg" role="group" aria-label="函數選擇">
+              <button type="button" data-fn="sin" class="active">sin</button>
+              <button type="button" data-fn="cos">cos</button>
+              <button type="button" data-fn="tan">tan</button>
+            </div>
+          </div>
+
+          <div class="formula" id="formula">y = sin x<small>標準型：y = A·f(B(x-h)) + D</small></div>
+
+          <div class="control">
+            <label for="A">A：鉛直伸縮 <output id="Aout">1</output></label>
+            <input id="A" type="range" min="-4" max="4" step="0.25" value="1" />
+          </div>
+          <div class="control">
+            <label for="B">B：水平伸縮 <output id="Bout">1</output></label>
+            <input id="B" type="range" min="0.25" max="4" step="0.25" value="1" />
+          </div>
+          <div class="control">
+            <label for="H">h：水平平移 <output id="Hout">0</output></label>
+            <input id="H" type="range" min="-6.283" max="6.283" step="0.262" value="0" />
+          </div>
+          <div class="control">
+            <label for="D">D：上下平移 <output id="Dout">0</output></label>
+            <input id="D" type="range" min="-4" max="4" step="0.25" value="0" />
+          </div>
+
+          <div class="toolbar">
+            <button class="btn primary" type="button" id="resetBtn">回到基本圖形</button>
+            <button class="btn" type="button" data-preset="shift">平移例</button>
+            <button class="btn" type="button" data-preset="stretch">伸縮例</button>
+            <button class="btn" type="button" data-preset="general">綜合例</button>
+          </div>
+
+          <div class="props" id="props" aria-live="polite"></div>
+          <div class="learnnote" id="conceptNote">觀察：正弦與餘弦的圖形有固定振幅與週期；改變 A、B、h、D，可以把基本圖形伸縮與平移。</div>
+        </div>
+
+        <div>
+          <div class="toolbar">
+            <button class="btn" type="button" data-range="one">聚焦 0～2π</button>
+            <button class="btn" type="button" data-range="multi">顯示多週期</button>
+            <button class="btn" type="button" id="toggleBase">隱藏基本圖形</button>
+          </div>
+          <div class="canvasbox">
+            <canvas id="graph" width="900" height="520" aria-label="三角函數圖形"></canvas>
+          </div>
+          <div class="legend">
+            <span><i class="dot" style="background:#0f6f83"></i>目前函數</span>
+            <span><i class="dot" style="background:#95a7b5"></i>基本函數 y=f(x)</span>
+            <span><i class="dot" style="background:#e38736"></i>中心線 / 漸近線</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="transform">
+      <div class="section-title"><h2>2. 變換拆解</h2><span>依「先伸縮，再平移」逐步看</span></div>
+      <div class="card">
+        <div class="steps" id="stepButtons">
+          <button class="stepbtn active" type="button" data-step="0">0 基本圖形</button>
+          <button class="stepbtn" type="button" data-step="1">1 鉛直伸縮</button>
+          <button class="stepbtn" type="button" data-step="2">2 水平伸縮</button>
+          <button class="stepbtn" type="button" data-step="3">3 左右平移</button>
+          <button class="stepbtn" type="button" data-step="4">4 上下平移</button>
+        </div>
+        <div class="grid2even">
+          <div class="canvasbox"><canvas id="stepGraph" width="700" height="360" aria-label="函數變換分解圖"></canvas></div>
+          <div>
+            <h3 id="stepTitle" style="margin-top:0">基本圖形 y = f(x)</h3>
+            <p id="stepExplain">先熟悉 y=sin x、y=cos x 或 y=tan x 的原始形狀，再逐步加入參數。</p>
+            <div class="learnnote">
+              <b>讀圖口訣：</b><br>
+              A 看「高矮」；B 看「疏密」；h 看「左右」；D 看「上下」。<br>
+              對 sin、cos 而言，週期是 <b>2π / |B|</b>；對 tan 而言，週期是 <b>π / |B|</b>。
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="circle">
+      <div class="section-title"><h2>3. 單位圓與圖形連動</h2><span>角度的位置，直接決定 sin、cos、tan</span></div>
+      <div class="card grid2even">
+        <div>
+          <div class="canvasbox"><canvas id="circleCanvas" width="560" height="440" aria-label="單位圓與三角函數值"></canvas></div>
+          <div class="angle-controls">
+            <div class="control" style="border-top:0">
+              <label for="angle">角度 θ <output id="angleOut">0°</output></label>
+              <input id="angle" type="range" min="0" max="360" step="1" value="0" />
+            </div>
+            <button class="btn primary" type="button" id="playAngle">播放角度</button>
+          </div>
+          <div class="pillrow" aria-label="特殊角">
+            <button class="pill" type="button" data-angle="0">0</button>
+            <button class="pill" type="button" data-angle="30">π/6</button>
+            <button class="pill" type="button" data-angle="45">π/4</button>
+            <button class="pill" type="button" data-angle="60">π/3</button>
+            <button class="pill" type="button" data-angle="90">π/2</button>
+            <button class="pill" type="button" data-angle="180">π</button>
+            <button class="pill" type="button" data-angle="270">3π/2</button>
+            <button class="pill" type="button" data-angle="360">2π</button>
+          </div>
+        </div>
+        <div>
+          <div class="readout" aria-live="polite">
+            <div class="cell"><span>弳度</span><strong id="radRead">0</strong></div>
+            <div class="cell"><span>sin θ</span><strong id="sinRead">0</strong></div>
+            <div class="cell"><span>cos θ</span><strong id="cosRead">1</strong></div>
+            <div class="cell"><span>tan θ</span><strong id="tanRead">0</strong></div>
+            <div class="cell"><span>x 座標</span><strong id="xRead">1</strong></div>
+            <div class="cell"><span>y 座標</span><strong id="yRead">0</strong></div>
+          </div>
+          <div class="learnnote" id="circleNote">
+            單位圓上的點 P(cos θ, sin θ)：<b>cos θ 是 x 座標，sin θ 是 y 座標</b>。把 y 座標隨 θ 的變化依序記錄，就會得到正弦曲線。
+          </div>
+          <p style="color:var(--muted);font-size:14px">橘色切線示意 tan θ。當 cos θ 接近 0 時，tan θ 的絕對值會快速增大，這正對應正切圖形的垂直漸近線。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="intersection">
+      <div class="section-title"><h2>4. 交點與方程式</h2><span>把「解方程式」改成「找圖形交點」</span></div>
+      <div class="card">
+        <div class="grid2">
+          <div>
+            <div class="mini-title">模式</div>
+            <select id="interMode">
+              <option value="horizontal">y = f(x) 與水平線 y = k</option>
+              <option value="textbook">cos x 與 cos(x+π)+1</option>
+            </select>
+            <div id="horizontalControls">
+              <div class="control">
+                <label for="interFn">函數</label>
+                <select id="interFn">
+                  <option value="sin">y = sin x</option>
+                  <option value="cos">y = cos x</option>
+                  <option value="tan">y = tan x</option>
+                </select>
+              </div>
+              <div class="control">
+                <label for="K">水平線 k <output id="Kout">0.5</output></label>
+                <input id="K" type="range" min="-2" max="2" step="0.1" value="0.5" />
+              </div>
+              <div class="control">
+                <label for="interRange">範圍</label>
+                <select id="interRange">
+                  <option value="2">0 ≤ x ≤ 2π</option>
+                  <option value="4">0 ≤ x ≤ 4π</option>
+                </select>
+              </div>
+            </div>
+            <div class="learnnote" id="interResult" aria-live="polite"></div>
+          </div>
+          <div class="canvasbox"><canvas id="interGraph" width="850" height="420" aria-label="方程式交點圖"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz">
+      <div class="section-title"><h2>5. 自我檢核</h2><span>概念題，作答後立即回饋</span></div>
+      <div class="card" id="quizBox">
+        <div class="quizq" data-answer="b">
+          <b>Q1. y = 3 sin(2x) 的振幅與週期為何？</b>
+          <div class="options">
+            <label><input type="radio" name="q1" value="a"> 振幅 2，週期 3π</label>
+            <label><input type="radio" name="q1" value="b"> 振幅 3，週期 π</label>
+            <label><input type="radio" name="q1" value="c"> 振幅 3，週期 2π</label>
+          </div><div class="feedback"></div>
+        </div>
+        <div class="quizq" data-answer="a">
+          <b>Q2. y = sin(x - π/3) + 2 是由 y=sin x 如何移動？</b>
+          <div class="options">
+            <label><input type="radio" name="q2" value="a"> 右移 π/3，再上移 2</label>
+            <label><input type="radio" name="q2" value="b"> 左移 π/3，再上移 2</label>
+            <label><input type="radio" name="q2" value="c"> 右移 2，再上移 π/3</label>
+          </div><div class="feedback"></div>
+        </div>
+        <div class="quizq" data-answer="c">
+          <b>Q3. y = 2 cos x - 1 的最大值、最小值為何？</b>
+          <div class="options">
+            <label><input type="radio" name="q3" value="a"> 最大 2，最小 -2</label>
+            <label><input type="radio" name="q3" value="b"> 最大 3，最小 -1</label>
+            <label><input type="radio" name="q3" value="c"> 最大 1，最小 -3</label>
+          </div><div class="feedback"></div>
+        </div>
+        <div class="quizq" data-answer="b">
+          <b>Q4. y = tan(2x) 的週期為何？</b>
+          <div class="options">
+            <label><input type="radio" name="q4" value="a"> π</label>
+            <label><input type="radio" name="q4" value="b"> π/2</label>
+            <label><input type="radio" name="q4" value="c"> 2π</label>
+          </div><div class="feedback"></div>
+        </div>
+        <div class="quizq" data-answer="a">
+          <b>Q5. 哪一個函數的圖形與 y = cos x 完全相同？</b>
+          <div class="options">
+            <label><input type="radio" name="q5" value="a"> y = sin(x + π/2)</label>
+            <label><input type="radio" name="q5" value="b"> y = sin(x - π/2)</label>
+            <label><input type="radio" name="q5" value="c"> y = sin x + π/2</label>
+          </div><div class="feedback"></div>
+        </div>
+        <div class="toolbar" style="margin-top:14px">
+          <button class="btn primary" type="button" id="checkQuiz">批改全部</button>
+          <button class="btn" type="button" id="clearQuiz">清除答案</button>
+          <strong id="quizScore" style="padding:8px 0"></strong>
+        </div>
+      </div>
+    </section>
+
+    <section id="teacher">
+      <div class="section-title"><h2>6. 教學提示</h2><span>可投影示範，也可讓學生自行探索</span></div>
+      <div class="card applications">
+        <div class="appcard">
+          <h3>建議流程 A：先觀察再公式化</h3>
+          <ol>
+            <li>固定 B=h=D，先只改 A，讓學生說出「高度」怎麼變。</li>
+            <li>固定 A=h=D，改 B，觀察波形疏密與週期。</li>
+            <li>再加入 h、D，要求學生用「左／右、上／下」描述。</li>
+            <li>最後才整理成振幅、週期、平移的公式。</li>
+          </ol>
+        </div>
+        <div class="appcard">
+          <h3>建議流程 B：單位圓 → 曲線</h3>
+          <ol>
+            <li>用特殊角按鈕切換 0、π/6、π/4、π/3、π/2。</li>
+            <li>要求學生先預測 sin、cos 正負，再看數值。</li>
+            <li>把 θ 慢慢播放一圈，連結「圓周運動」與「週期函數」。</li>
+            <li>切到 tan，特別觀察 cos θ 接近 0 時的變化。</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">本工具為純 HTML / CSS / JavaScript，可直接部署到 GitHub Pages，不需要伺服器或安裝套件。</div>
+  </main>
+
+<script>
+(() => {
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const PI = Math.PI;
+  const state = { fn:'sin', A:1, B:1, h:0, D:0, range:'multi', showBase:true, step:0 };
+
+  const colors = { main:'#0f6f83', base:'#95a7b5', accent:'#e38736', grid:'#e3eaf0', axis:'#547084', point:'#c95146' };
+
+  function f(fn, x){
+    if(fn==='sin') return Math.sin(x);
+    if(fn==='cos') return Math.cos(x);
+    return Math.tan(x);
+  }
+  function yAt(x, step=4){
+    const {fn,A,B,h,D}=state;
+    if(step===0) return f(fn,x);
+    if(step===1) return A*f(fn,x);
+    if(step===2) return A*f(fn,B*x);
+    if(step===3) return A*f(fn,B*(x-h));
+    return A*f(fn,B*(x-h))+D;
+  }
+  function n(v, digits=2){
+    if(!Number.isFinite(v)) return '未定義';
+    if(Math.abs(v)<1e-10) v=0;
+    return Number(v.toFixed(digits)).toString();
+  }
+  function piFrac(x){
+    if(Math.abs(x)<1e-5) return '0';
+    const q=x/PI;
+    const denoms=[1,2,3,4,6,8,12];
+    let best={err:1e9,num:0,den:1};
+    denoms.forEach(d=>{
+      const num=Math.round(q*d), err=Math.abs(q-num/d);
+      if(err<best.err) best={err,num,den:d};
+    });
+    if(best.err<0.015){
+      const {num,den}=best;
+      if(den===1){
+        if(num===1) return 'π';
+        if(num===-1) return '-π';
+        return `${num}π`;
+      }
+      if(num===1) return `π/${den}`;
+      if(num===-1) return `-π/${den}`;
+      return `${num}π/${den}`;
+    }
+    return n(x,2);
+  }
+  function setCanvasSize(canvas, cssHeightRatio){
+    const rect=canvas.getBoundingClientRect();
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    const w=Math.max(300,rect.width);
+    const h=w*cssHeightRatio;
+    canvas.style.height=h+'px';
+    canvas.width=Math.round(w*dpr);
+    canvas.height=Math.round(h*dpr);
+    const ctx=canvas.getContext('2d');
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    return {ctx,w,h};
+  }
+  function drawAxes(ctx,w,h,xmin,xmax,ymin,ymax,piTicks=true){
+    const X=x=> (x-xmin)/(xmax-xmin)*w;
+    const Y=y=> h-(y-ymin)/(ymax-ymin)*h;
+    ctx.clearRect(0,0,w,h);
+    ctx.lineWidth=1;
+    ctx.strokeStyle=colors.grid;
+    const xstep=PI/2;
+    if(piTicks){
+      const start=Math.ceil(xmin/xstep);
+      const end=Math.floor(xmax/xstep);
+      ctx.font='12px system-ui';
+      ctx.fillStyle=colors.axis;
+      ctx.textAlign='center';
+      for(let k=start;k<=end;k++){
+        const x=k*xstep, px=X(x);
+        ctx.beginPath(); ctx.moveTo(px,0); ctx.lineTo(px,h); ctx.stroke();
+        if(Math.abs(x)>1e-8 && Y(0)>15 && Y(0)<h-5) ctx.fillText(piFrac(x),px,Y(0)+16);
+      }
+    } else {
+      ctx.font='12px system-ui'; ctx.fillStyle=colors.axis; ctx.textAlign='center';
+      const steps=8;
+      for(let i=0;i<=steps;i++){
+        const x=xmin+(xmax-xmin)*i/steps, px=X(x);
+        ctx.beginPath();ctx.moveTo(px,0);ctx.lineTo(px,h);ctx.stroke();
+        if(i%2===0) ctx.fillText(n(x,1),px,Math.min(h-5,Math.max(14,Y(0)+16)));
+      }
+    }
+    const ystep=(ymax-ymin>12)?5:1;
+    ctx.textAlign='right'; ctx.textBaseline='middle';
+    for(let y=Math.ceil(ymin/ystep)*ystep;y<=ymax;y+=ystep){
+      const py=Y(y);
+      ctx.strokeStyle=colors.grid;ctx.beginPath();ctx.moveTo(0,py);ctx.lineTo(w,py);ctx.stroke();
+      if(Math.abs(y)>1e-8 && X(0)>25 && X(0)<w-5){ctx.fillStyle=colors.axis;ctx.fillText(n(y,1),X(0)-5,py);}
+    }
+    ctx.strokeStyle=colors.axis;ctx.lineWidth=1.4;
+    if(0>=xmin&&0<=xmax){ctx.beginPath();ctx.moveTo(X(0),0);ctx.lineTo(X(0),h);ctx.stroke();}
+    if(0>=ymin&&0<=ymax){ctx.beginPath();ctx.moveTo(0,Y(0));ctx.lineTo(w,Y(0));ctx.stroke();}
+    return {X,Y};
+  }
+  function plot(ctx,w,h,xmin,xmax,ymin,ymax,fun,color,width=2.5,dashed=false){
+    const X=x=> (x-xmin)/(xmax-xmin)*w;
+    const Y=y=> h-(y-ymin)/(ymax-ymin)*h;
+    ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dashed?[7,6]:[]);
+    let started=false, prevY=null;
+    ctx.beginPath();
+    const N=Math.max(1000,Math.round(w*2));
+    for(let i=0;i<=N;i++){
+      const x=xmin+(xmax-xmin)*i/N;
+      const y=fun(x);
+      const jump=prevY!==null && Math.abs(y-prevY)>(ymax-ymin)*0.65;
+      const bad=!Number.isFinite(y)||Math.abs(y)>Math.max(50,(ymax-ymin)*8)||jump;
+      if(bad){started=false;prevY=null;continue;}
+      const px=X(x),py=Y(y);
+      if(py<-h*2||py>h*3){started=false;prevY=y;continue;}
+      if(!started){ctx.moveTo(px,py);started=true;} else ctx.lineTo(px,py);
+      prevY=y;
+    }
+    ctx.stroke();ctx.setLineDash([]);
+  }
+  function graphBounds(){
+    const xmin=state.range==='one'?0:-2*PI;
+    const xmax=state.range==='one'?2*PI:4*PI;
+    let span;
+    if(state.fn==='tan') span=Math.max(5,Math.abs(state.D)+Math.abs(state.A)*4+1);
+    else span=Math.max(2.4,Math.abs(state.D)+Math.abs(state.A)+1);
+    return {xmin,xmax,ymin:-span,ymax:span};
+  }
+  function drawAsymptotes(ctx,w,h,xmin,xmax,ymin,ymax){
+    if(state.fn!=='tan') return;
+    const X=x=>(x-xmin)/(xmax-xmin)*w;
+    ctx.strokeStyle=colors.accent;ctx.setLineDash([5,5]);ctx.lineWidth=1.3;
+    const B=state.B,h0=state.h;
+    const kmin=Math.floor((B*(xmin-h0)-PI/2)/PI)-1;
+    const kmax=Math.ceil((B*(xmax-h0)-PI/2)/PI)+1;
+    for(let k=kmin;k<=kmax;k++){
+      const x=h0+(PI/2+k*PI)/B;
+      if(x>xmin&&x<xmax){ctx.beginPath();ctx.moveTo(X(x),0);ctx.lineTo(X(x),h);ctx.stroke();}
+    }
+    ctx.setLineDash([]);
+  }
+  function drawMain(){
+    const c=$('#graph'), {ctx,w,h}=setCanvasSize(c,.56);
+    const b=graphBounds(); drawAxes(ctx,w,h,b.xmin,b.xmax,b.ymin,b.ymax,true);
+    if(state.showBase) plot(ctx,w,h,b.xmin,b.xmax,b.ymin,b.ymax,x=>f(state.fn,x),colors.base,2,true);
+    if(state.fn!=='tan'){
+      const Y=y=>h-(y-b.ymin)/(b.ymax-b.ymin)*h;
+      ctx.strokeStyle=colors.accent;ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(0,Y(state.D));ctx.lineTo(w,Y(state.D));ctx.stroke();ctx.setLineDash([]);
+    }
+    drawAsymptotes(ctx,w,h,b.xmin,b.xmax,b.ymin,b.ymax);
+    plot(ctx,w,h,b.xmin,b.xmax,b.ymin,b.ymax,x=>yAt(x,4),colors.main,3,false);
+  }
+  function updateUI(){
+    $('#Aout').textContent=n(state.A,2);
+    $('#Bout').textContent=n(state.B,2);
+    $('#Hout').textContent=piFrac(state.h);
+    $('#Dout').textContent=n(state.D,2);
+    const fname=state.fn;
+    const inner = state.B===1 ? `(x${state.h===0?'':(state.h>0?` - ${piFrac(state.h)}`:` + ${piFrac(-state.h)}`)})` :
+      `${n(state.B,2)}(x${state.h===0?'':(state.h>0?` - ${piFrac(state.h)}`:` + ${piFrac(-state.h)}`)})`;
+    const a = state.A===1?'':state.A===-1?'-':`${n(state.A,2)}·`;
+    const d = state.D===0?'':state.D>0?` + ${n(state.D,2)}`:` - ${n(-state.D,2)}`;
+    $('#formula').innerHTML=`y = ${a}${fname} ${inner}${d}<small>標準型：y = A·f(B(x-h)) + D</small>`;
+    const p=$('#props'); p.innerHTML='';
+    const add=(k,v)=>{const d=document.createElement('div');d.className='prop';d.innerHTML=`<b>${k}</b><span>${v}</span>`;p.appendChild(d);};
+    if(fname==='tan'){
+      add('週期',piFrac(PI/Math.abs(state.B)));
+      add('值域','全體實數 ℝ');
+      add('振幅','不適用');
+      add('中心線',`y = ${n(state.D,2)}`);
+      $('#conceptNote').innerHTML='正切函數沒有最大值、最小值，也沒有振幅；最重要的是 <b>週期</b> 與 <b>垂直漸近線</b>。當角度接近 π/2 + kπ 時，tan 值會急遽增大或減小。';
+    } else {
+      const amp=Math.abs(state.A), period=2*PI/Math.abs(state.B);
+      add('振幅',n(amp,2)); add('週期',piFrac(period));
+      add('最大值',n(state.D+amp,2)); add('最小值',n(state.D-amp,2));
+      $('#conceptNote').innerHTML=`目前振幅為 <b>${n(amp,2)}</b>，週期為 <b>${piFrac(period)}</b>。請試著只動一個滑桿，觀察是哪一種幾何變化。`;
+    }
+    $$('.seg button').forEach(b=>b.classList.toggle('active',b.dataset.fn===state.fn));
+    drawMain(); drawStep();
+  }
+  function setState(part){
+    Object.assign(state,part);
+    $('#A').value=state.A; $('#B').value=state.B; $('#H').value=state.h; $('#D').value=state.D;
+    updateUI();
+  }
+
+  $$('.seg button').forEach(btn=>btn.addEventListener('click',()=>{state.fn=btn.dataset.fn;updateUI();}));
+  [['A','A'],['B','B'],['H','h'],['D','D']].forEach(([id,key])=>{
+    $('#'+id).addEventListener('input',e=>{state[key]=Number(e.target.value);updateUI();});
+  });
+  $('#resetBtn').addEventListener('click',()=>setState({A:1,B:1,h:0,D:0}));
+  $$('[data-preset]').forEach(b=>b.addEventListener('click',()=>{
+    const p=b.dataset.preset;
+    if(p==='shift') setState({fn:'sin',A:1,B:1,h:3*PI/4,D:1});
+    if(p==='stretch') setState({fn:'sin',A:2,B:2,h:0,D:0});
+    if(p==='general') setState({fn:'sin',A:3,B:2,h:-PI/3,D:1});
+  }));
+  $$('[data-range]').forEach(b=>b.addEventListener('click',()=>{state.range=b.dataset.range;drawMain();}));
+  $('#toggleBase').addEventListener('click',e=>{
+    state.showBase=!state.showBase;e.target.textContent=state.showBase?'隱藏基本圖形':'顯示基本圖形';drawMain();
+  });
+
+  // Transformation steps
+  const stepTexts=[
+    ['基本圖形 y = f(x)','先熟悉基本形狀。sin 與 cos 的週期是 2π；tan 的週期是 π。'],
+    ['加入 A：y = A·f(x)','A 改變鉛直方向的伸縮。對 sin、cos，振幅變成 |A|；A 為負時，還會對 x 軸翻轉。'],
+    ['再加入 B：y = A·f(Bx)','B 改變水平方向的伸縮。B 越大，圖形越密、週期越短。'],
+    ['再加入 h：y = A·f(B(x-h))','h 控制左右平移：h>0 向右，h<0 向左。請注意括號內的符號與移動方向相反。'],
+    ['最後加入 D：y = A·f(B(x-h))+D','D 控制上下平移，同時也把中心線從 y=0 移到 y=D。']
+  ];
+  function drawStep(){
+    const c=$('#stepGraph'),{ctx,w,h}=setCanvasSize(c,.51);
+    const xmin=-PI,xmax=3*PI;
+    let span=state.fn==='tan'?5:Math.max(2.5,Math.abs(state.D)+Math.abs(state.A)+1);
+    const ymin=-span,ymax=span;drawAxes(ctx,w,h,xmin,xmax,ymin,ymax,true);
+    if(state.step>0) plot(ctx,w,h,xmin,xmax,ymin,ymax,x=>yAt(x,state.step-1),colors.base,2,true);
+    if(state.fn==='tan' && state.step>=3){
+      const oldRange=state.range; state.range='one'; drawAsymptotes(ctx,w,h,xmin,xmax,ymin,ymax); state.range=oldRange;
+    }
+    plot(ctx,w,h,xmin,xmax,ymin,ymax,x=>yAt(x,state.step),colors.main,3,false);
+    $('#stepTitle').textContent=stepTexts[state.step][0];
+    $('#stepExplain').textContent=stepTexts[state.step][1];
+    $$('.stepbtn').forEach(b=>b.classList.toggle('active',Number(b.dataset.step)===state.step));
+  }
+  $$('.stepbtn').forEach(b=>b.addEventListener('click',()=>{state.step=Number(b.dataset.step);drawStep();}));
+
+  // Unit circle
+  const special = new Map([[0,'0'],[30,'π/6'],[45,'π/4'],[60,'π/3'],[90,'π/2'],[120,'2π/3'],[135,'3π/4'],[150,'5π/6'],[180,'π'],[270,'3π/2'],[360,'2π']]);
+  let anim=null;
+  function drawCircle(){
+    const deg=Number($('#angle').value), th=deg*PI/180;
+    $('#angleOut').textContent=deg+'°';
+    $('#radRead').textContent=special.get(deg)||piFrac(th);
+    const s=Math.sin(th), co=Math.cos(th), ta=Math.abs(co)<1e-7?NaN:Math.tan(th);
+    $('#sinRead').textContent=n(s,3); $('#cosRead').textContent=n(co,3); $('#tanRead').textContent=Number.isFinite(ta)?n(ta,3):'未定義';
+    $('#xRead').textContent=n(co,3); $('#yRead').textContent=n(s,3);
+
+    const c=$('#circleCanvas'),{ctx,w,h}=setCanvasSize(c,.79);
+    ctx.clearRect(0,0,w,h);
+    const cx=w*.43,cy=h*.50,R=Math.min(w,h)*.31;
+    ctx.strokeStyle=colors.grid;ctx.lineWidth=1;
+    for(let i=0;i<9;i++){const y=cy-R+i*R/4;ctx.beginPath();ctx.moveTo(16,y);ctx.lineTo(w-16,y);ctx.stroke();}
+    ctx.strokeStyle=colors.axis;ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.moveTo(15,cy);ctx.lineTo(w-15,cy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,15);ctx.lineTo(cx,h-15);ctx.stroke();
+    ctx.strokeStyle=colors.main;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(cx,cy,R,0,2*PI);ctx.stroke();
+
+    const px=cx+R*co, py=cy-R*s;
+    ctx.strokeStyle='#547084';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,py);ctx.stroke();
+
+    // cos projection
+    ctx.strokeStyle='#5b7fa6';ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,cy);ctx.stroke();
+    // sin projection
+    ctx.strokeStyle='#6f9a69';ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(cx,py);ctx.stroke();ctx.setLineDash([]);
+
+    ctx.fillStyle=colors.point;ctx.beginPath();ctx.arc(px,py,5,0,2*PI);ctx.fill();
+    ctx.fillStyle=colors.axis;ctx.font='13px system-ui';ctx.fillText(`P(${n(co,2)}, ${n(s,2)})`,Math.min(w-120,px+8),Math.max(18,py-8));
+
+    // tangent line x=1
+    const tx=cx+R;
+    ctx.strokeStyle=colors.accent;ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(tx,18);ctx.lineTo(tx,h-18);ctx.stroke();ctx.setLineDash([]);
+    if(Number.isFinite(ta) && Math.abs(ta)<2.2){
+      const iy=cy-R*ta;
+      ctx.strokeStyle=colors.accent;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(tx,iy);ctx.stroke();
+      ctx.fillStyle=colors.accent;ctx.beginPath();ctx.arc(tx,iy,4,0,2*PI);ctx.fill();
+      ctx.fillText(`tan θ=${n(ta,2)}`,Math.min(w-110,tx+8),Math.max(18,Math.min(h-18,iy)));
+    }
+    ctx.fillStyle=colors.axis;ctx.fillText('1',tx-3,cy+17);
+    $('#circleNote').innerHTML=Number.isFinite(ta)
+      ?`P(cos θ, sin θ) = P(<b>${n(co,3)}</b>, <b>${n(s,3)}</b>)。因此 sin θ 直接讀 y 座標，cos θ 直接讀 x 座標。`
+      :`此時 cos θ = 0，所以 tan θ = sin θ / cos θ <b>沒有定義</b>；在正切圖形上對應垂直漸近線。`;
+  }
+  $('#angle').addEventListener('input',drawCircle);
+  $$('.pill').forEach(b=>b.addEventListener('click',()=>{$('#angle').value=b.dataset.angle;drawCircle();}));
+  $('#playAngle').addEventListener('click',e=>{
+    if(anim){clearInterval(anim);anim=null;e.target.textContent='播放角度';return;}
+    e.target.textContent='暫停';
+    anim=setInterval(()=>{
+      let v=(Number($('#angle').value)+2)%361;
+      $('#angle').value=v;drawCircle();
+      if(v===360){clearInterval(anim);anim=null;e.target.textContent='播放角度';}
+    },45);
+  });
+
+  // Intersection lab
+  function rootsHorizontal(fn,k,xmax){
+    const roots=[], N=6000, eps=1e-3;
+    let px=0, py=f(fn,0)-k;
+    const add=x=>{if(!roots.some(r=>Math.abs(r-x)<.015)) roots.push(x);};
+    if(Math.abs(py)<eps) add(0);
+    for(let i=1;i<=N;i++){
+      const x=xmax*i/N, y=f(fn,x)-k;
+      const discontinuity=fn==='tan' && (!Number.isFinite(y)||Math.abs(y)>50||Math.abs(py)>50);
+      if(!discontinuity && Number.isFinite(y)&&Number.isFinite(py)){
+        if(Math.abs(y)<eps) add(x);
+        if(y*py<0){
+          let a=px,b=x,fa=py,fb=y;
+          for(let j=0;j<25;j++){const m=(a+b)/2,fm=f(fn,m)-k;if(fa*fm<=0){b=m;fb=fm}else{a=m;fa=fm}}
+          add((a+b)/2);
+        }
+      }
+      px=x;py=y;
+    }
+    return roots.filter(x=>x>=-1e-6&&x<=xmax+1e-6);
+  }
+  function drawInter(){
+    const mode=$('#interMode').value;
+    $('#horizontalControls').style.display=mode==='horizontal'?'block':'none';
+    const c=$('#interGraph'),{ctx,w,h}=setCanvasSize(c,.49);
+    const xmax=(mode==='horizontal'?Number($('#interRange').value):2)*PI;
+    const xmin=0;
+    if(mode==='textbook'){
+      const ymin=-2.5,ymax=2.5;drawAxes(ctx,w,h,xmin,xmax,ymin,ymax,true);
+      plot(ctx,w,h,xmin,xmax,ymin,ymax,x=>Math.cos(x),colors.main,3,false);
+      plot(ctx,w,h,xmin,xmax,ymin,ymax,x=>Math.cos(x+PI)+1,colors.accent,3,false);
+      // roots of cosx - (cos(x+pi)+1)
+      const roots=[];
+      const fun=x=>Math.cos(x)-(Math.cos(x+PI)+1);
+      let px=xmin,py=fun(px);
+      for(let i=1;i<=4000;i++){
+        const x=xmin+(xmax-xmin)*i/4000,y=fun(x);
+        if(y*py<0||Math.abs(y)<1e-4){
+          let a=px,b=x,fa=py;
+          for(let j=0;j<22;j++){const m=(a+b)/2,fm=fun(m);if(fa*fm<=0)b=m;else{a=m;fa=fm}}
+          const r=(a+b)/2;if(!roots.some(z=>Math.abs(z-r)<.01))roots.push(r);
+        } px=x;py=y;
+      }
+      $('#interResult').innerHTML=`在 <b>0 ≤ x ≤ 2π</b> 中，兩條曲線共有 <b>${roots.length} 個交點</b>。這就是對應方程式的解的個數。`;
+    } else {
+      const fn=$('#interFn').value,k=Number($('#K').value);
+      $('#Kout').textContent=n(k,1);
+      const ymin=fn==='tan'?-5: -2.4, ymax=fn==='tan'?5:2.4;
+      const {Y}=drawAxes(ctx,w,h,xmin,xmax,ymin,ymax,true);
+      if(fn==='tan'){
+        ctx.strokeStyle=colors.accent;ctx.setLineDash([5,5]);
+        for(let m=0;m<10;m++){const x=PI/2+m*PI;if(x<xmax){const X=x/xmax*w;ctx.beginPath();ctx.moveTo(X,0);ctx.lineTo(X,h);ctx.stroke();}}
+        ctx.setLineDash([]);
+      }
+      plot(ctx,w,h,xmin,xmax,ymin,ymax,x=>f(fn,x),colors.main,3,false);
+      ctx.strokeStyle=colors.accent;ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(0,Y(k));ctx.lineTo(w,Y(k));ctx.stroke();
+      const roots=rootsHorizontal(fn,k,xmax);
+      $('#interResult').innerHTML=`找到 <b>${roots.length} 個交點</b>。${roots.length?`約在 x = ${roots.map(piFrac).join('、')}`:'在目前範圍內沒有交點。'}`;
+    }
+  }
+  ['interMode','interFn','K','interRange'].forEach(id=>$('#'+id).addEventListener(id==='K'?'input':'change',drawInter));
+
+  // Quiz
+  $('#checkQuiz').addEventListener('click',()=>{
+    let score=0,total=0;
+    $$('.quizq').forEach(q=>{
+      total++;const sel=$('input:checked',q),fb=$('.feedback',q);
+      if(!sel){fb.textContent='尚未作答';fb.className='feedback bad';return;}
+      const ok=sel.value===q.dataset.answer; if(ok)score++;
+      fb.textContent=ok?'✓ 正確':'✗ 再觀察圖形與公式的關係';fb.className='feedback '+(ok?'good':'bad');
+    });
+    $('#quizScore').textContent=`得分：${score} / ${total}`;
+  });
+  $('#clearQuiz').addEventListener('click',()=>{
+    $$('#quizBox input[type=radio]').forEach(x=>x.checked=false);
+    $$('.feedback').forEach(x=>{x.textContent='';x.className='feedback';});
+    $('#quizScore').textContent='';
+  });
+
+  // resize
+  let resizeTimer;
+  window.addEventListener('resize',()=>{
+    clearTimeout(resizeTimer);
+    resizeTimer=setTimeout(()=>{drawMain();drawStep();drawCircle();drawInter();},120);
+  });
+
+  updateUI(); drawCircle(); drawInter();
+})();
+</script>
+</body>
+</html>
