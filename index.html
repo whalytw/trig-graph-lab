@@ -880,12 +880,12 @@
       });
       box.appendChild(item);
     });
-    $('#quizScore').textContent='';
+    $('#quizScore').textContent=''; $('#quizScore').style.color='var(--ink)';
   }
 
   $('#checkQuiz').addEventListener('click',()=>{
     let score=0;
-    $$('.quizq','#quizQuestions').forEach((item,qi)=>{
+    $$('.quizq',$('#quizQuestions')).forEach((item,qi)=>{
       const sel=$('input:checked',item);
       const fb=$('.feedback',item);
       const q=currentQuiz[qi];
@@ -901,13 +901,13 @@
         :`✗ 正確答案：${q.correct}<br><span style="font-weight:500">${q.explain}</span>`;
       fb.className='feedback '+(ok?'good':'bad');
     });
-    $('#quizScore').textContent=`得分：${score} / 5`;
+    $('#quizScore').textContent=`得分：${score} / 5`; $('#quizScore').style.color = score===5 ? 'var(--good)' : 'var(--ink)';
   });
 
   $('#clearQuiz').addEventListener('click',()=>{
     $$('#quizQuestions input[type=radio]').forEach(x=>x.checked=false);
-    $$('.feedback','#quizQuestions').forEach(x=>{x.textContent='';x.className='feedback';});
-    $('#quizScore').textContent='';
+    $$('.feedback',$('#quizQuestions')).forEach(x=>{x.textContent='';x.className='feedback';});
+    $('#quizScore').textContent=''; $('#quizScore').style.color='var(--ink)';
   });
 
   $('#newQuiz').addEventListener('click',()=>{
