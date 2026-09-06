@@ -102,10 +102,10 @@
     <div class="wrap hero">
       <div>
         <h1>三角函數圖形互動實驗室</h1>
-        <p>拖曳參數、觀察單位圓、比較圖形與交點，把「振幅、週期、平移、伸縮」變成看得見的變化。</p>
+        <p>自己拖曳參數、觀察單位圓、比較圖形與交點，從操作中找出「振幅、週期、平移、伸縮」的規律。</p>
       </div>
       <div class="hero-badge">
-        <strong>適用：高中數學</strong>
+        <strong>先動手，再找規律</strong>
         <span>sin / cos / tan · 圖形變換 · 單位圓 · 方程式交點</span>
       </div>
     </div>
@@ -118,7 +118,6 @@
       <a href="#circle">單位圓連動</a>
       <a href="#intersection">交點與方程式</a>
       <a href="#quiz">自我檢核</a>
-      <a href="#teacher">教學提示</a>
     </div>
   </nav>
 
@@ -136,8 +135,16 @@
             </div>
           </div>
 
-          <div class="formula" id="formula">y = sin x<small>標準型：y = A·f(B(x-h)) + D</small></div>
+          <div class="formula" id="formula">y = sin x<small>本頁用：y = A·f(Bx - h) + D</small></div>
 
+          <div class="control">
+            <label for="H">h：先左右平移 <output id="Hout">0</output></label>
+            <input id="H" type="range" min="-6.283" max="6.283" step="0.262" value="0" />
+          </div>
+          <div class="control">
+            <label for="D">D：上下平移 <output id="Dout">0</output></label>
+            <input id="D" type="range" min="-4" max="4" step="0.25" value="0" />
+          </div>
           <div class="control">
             <label for="A">A：鉛直伸縮 <output id="Aout">1</output></label>
             <input id="A" type="range" min="-4" max="4" step="0.25" value="1" />
@@ -145,14 +152,6 @@
           <div class="control">
             <label for="B">B：水平伸縮 <output id="Bout">1</output></label>
             <input id="B" type="range" min="0.25" max="4" step="0.25" value="1" />
-          </div>
-          <div class="control">
-            <label for="H">h：水平平移 <output id="Hout">0</output></label>
-            <input id="H" type="range" min="-6.283" max="6.283" step="0.262" value="0" />
-          </div>
-          <div class="control">
-            <label for="D">D：上下平移 <output id="Dout">0</output></label>
-            <input id="D" type="range" min="-4" max="4" step="0.25" value="0" />
           </div>
 
           <div class="toolbar">
@@ -163,7 +162,7 @@
           </div>
 
           <div class="props" id="props" aria-live="polite"></div>
-          <div class="learnnote" id="conceptNote">觀察：正弦與餘弦的圖形有固定振幅與週期；改變 A、B、h、D，可以把基本圖形伸縮與平移。</div>
+          <div class="learnnote" id="conceptNote">試著照順序操作：先改 h、D 看平移，再改 A、B 看伸縮。像 y = sin(2x - π)，可以想成先把 y = sin x 向右移 π，再把圖形左右壓縮成原來的 1/2。</div>
         </div>
 
         <div>
@@ -185,14 +184,14 @@
     </section>
 
     <section id="transform">
-      <div class="section-title"><h2>2. 變換拆解</h2><span>依「先伸縮，再平移」逐步看</span></div>
+      <div class="section-title"><h2>2. 變換拆解</h2><span>照順序按按看：先平移，再伸縮</span></div>
       <div class="card">
         <div class="steps" id="stepButtons">
           <button class="stepbtn active" type="button" data-step="0">0 基本圖形</button>
-          <button class="stepbtn" type="button" data-step="1">1 鉛直伸縮</button>
-          <button class="stepbtn" type="button" data-step="2">2 水平伸縮</button>
-          <button class="stepbtn" type="button" data-step="3">3 左右平移</button>
-          <button class="stepbtn" type="button" data-step="4">4 上下平移</button>
+          <button class="stepbtn" type="button" data-step="1">1 左右平移</button>
+          <button class="stepbtn" type="button" data-step="2">2 上下平移</button>
+          <button class="stepbtn" type="button" data-step="3">3 鉛直伸縮</button>
+          <button class="stepbtn" type="button" data-step="4">4 水平伸縮</button>
         </div>
         <div class="grid2even">
           <div class="canvasbox"><canvas id="stepGraph" width="700" height="360" aria-label="函數變換分解圖"></canvas></div>
@@ -200,8 +199,9 @@
             <h3 id="stepTitle" style="margin-top:0">基本圖形 y = f(x)</h3>
             <p id="stepExplain">先熟悉 y=sin x、y=cos x 或 y=tan x 的原始形狀，再逐步加入參數。</p>
             <div class="learnnote">
-              <b>讀圖口訣：</b><br>
-              A 看「高矮」；B 看「疏密」；h 看「左右」；D 看「上下」。<br>
+              <b>操作口訣：</b><br>
+              h 看「左右」；D 看「上下」；A 看「高矮」；B 看「疏密」。<br>
+              例如 <b>y = sin(2x - π)</b>：先右移 π，再左右壓縮成 1/2。<br>
               對 sin、cos 而言，週期是 <b>2π / |B|</b>；對 tan 而言，週期是 <b>π / |B|</b>。
             </div>
           </div>
@@ -288,81 +288,23 @@
     </section>
 
     <section id="quiz">
-      <div class="section-title"><h2>5. 自我檢核</h2><span>概念題，作答後立即回饋</span></div>
+      <div class="section-title"><h2>5. 自我檢核</h2><span>100 題題庫，每次隨機抽 5 題</span></div>
       <div class="card" id="quizBox">
-        <div class="quizq" data-answer="b">
-          <b>Q1. y = 3 sin(2x) 的振幅與週期為何？</b>
-          <div class="options">
-            <label><input type="radio" name="q1" value="a"> 振幅 2，週期 3π</label>
-            <label><input type="radio" name="q1" value="b"> 振幅 3，週期 π</label>
-            <label><input type="radio" name="q1" value="c"> 振幅 3，週期 2π</label>
-          </div><div class="feedback"></div>
+        <div class="learnnote" style="margin-top:0">
+          每次會從 <b>100 題</b>題庫中隨機抽出 5 題。答完可以按「批改全部」看結果；想再練一組，就按「重新出題」。
         </div>
-        <div class="quizq" data-answer="a">
-          <b>Q2. y = sin(x - π/3) + 2 是由 y=sin x 如何移動？</b>
-          <div class="options">
-            <label><input type="radio" name="q2" value="a"> 右移 π/3，再上移 2</label>
-            <label><input type="radio" name="q2" value="b"> 左移 π/3，再上移 2</label>
-            <label><input type="radio" name="q2" value="c"> 右移 2，再上移 π/3</label>
-          </div><div class="feedback"></div>
-        </div>
-        <div class="quizq" data-answer="c">
-          <b>Q3. y = 2 cos x - 1 的最大值、最小值為何？</b>
-          <div class="options">
-            <label><input type="radio" name="q3" value="a"> 最大 2，最小 -2</label>
-            <label><input type="radio" name="q3" value="b"> 最大 3，最小 -1</label>
-            <label><input type="radio" name="q3" value="c"> 最大 1，最小 -3</label>
-          </div><div class="feedback"></div>
-        </div>
-        <div class="quizq" data-answer="b">
-          <b>Q4. y = tan(2x) 的週期為何？</b>
-          <div class="options">
-            <label><input type="radio" name="q4" value="a"> π</label>
-            <label><input type="radio" name="q4" value="b"> π/2</label>
-            <label><input type="radio" name="q4" value="c"> 2π</label>
-          </div><div class="feedback"></div>
-        </div>
-        <div class="quizq" data-answer="a">
-          <b>Q5. 哪一個函數的圖形與 y = cos x 完全相同？</b>
-          <div class="options">
-            <label><input type="radio" name="q5" value="a"> y = sin(x + π/2)</label>
-            <label><input type="radio" name="q5" value="b"> y = sin(x - π/2)</label>
-            <label><input type="radio" name="q5" value="c"> y = sin x + π/2</label>
-          </div><div class="feedback"></div>
-        </div>
+        <div id="quizQuestions" aria-live="polite"></div>
         <div class="toolbar" style="margin-top:14px">
           <button class="btn primary" type="button" id="checkQuiz">批改全部</button>
           <button class="btn" type="button" id="clearQuiz">清除答案</button>
+          <button class="btn warn" type="button" id="newQuiz">重新出題</button>
           <strong id="quizScore" style="padding:8px 0"></strong>
         </div>
       </div>
     </section>
 
-    <section id="teacher">
-      <div class="section-title"><h2>6. 教學提示</h2><span>可投影示範，也可讓學生自行探索</span></div>
-      <div class="card applications">
-        <div class="appcard">
-          <h3>建議流程 A：先觀察再公式化</h3>
-          <ol>
-            <li>固定 B=h=D，先只改 A，讓學生說出「高度」怎麼變。</li>
-            <li>固定 A=h=D，改 B，觀察波形疏密與週期。</li>
-            <li>再加入 h、D，要求學生用「左／右、上／下」描述。</li>
-            <li>最後才整理成振幅、週期、平移的公式。</li>
-          </ol>
-        </div>
-        <div class="appcard">
-          <h3>建議流程 B：單位圓 → 曲線</h3>
-          <ol>
-            <li>用特殊角按鈕切換 0、π/6、π/4、π/3、π/2。</li>
-            <li>要求學生先預測 sin、cos 正負，再看數值。</li>
-            <li>把 θ 慢慢播放一圈，連結「圓周運動」與「週期函數」。</li>
-            <li>切到 tan，特別觀察 cos θ 接近 0 時的變化。</li>
-          </ol>
-        </div>
-      </div>
-    </section>
 
-    <div class="footer">本工具為純 HTML / CSS / JavaScript，可直接部署到 GitHub Pages，不需要伺服器或安裝套件。</div>
+    <div class="footer">動手拖曳、觀察、猜想，再回頭看看公式和圖形之間有什麼規律。</div>
   </main>
 
 <script>
@@ -382,10 +324,10 @@
   function yAt(x, step=4){
     const {fn,A,B,h,D}=state;
     if(step===0) return f(fn,x);
-    if(step===1) return A*f(fn,x);
-    if(step===2) return A*f(fn,B*x);
-    if(step===3) return A*f(fn,B*(x-h));
-    return A*f(fn,B*(x-h))+D;
+    if(step===1) return f(fn,x-h);
+    if(step===2) return f(fn,x-h)+D;
+    if(step===3) return A*f(fn,x-h)+D;
+    return A*f(fn,B*x-h)+D;
   }
   function n(v, digits=2){
     if(!Number.isFinite(v)) return '未定義';
@@ -498,10 +440,10 @@
     const X=x=>(x-xmin)/(xmax-xmin)*w;
     ctx.strokeStyle=colors.accent;ctx.setLineDash([5,5]);ctx.lineWidth=1.3;
     const B=state.B,h0=state.h;
-    const kmin=Math.floor((B*(xmin-h0)-PI/2)/PI)-1;
-    const kmax=Math.ceil((B*(xmax-h0)-PI/2)/PI)+1;
+    const kmin=Math.floor((B*xmin-h0-PI/2)/PI)-1;
+    const kmax=Math.ceil((B*xmax-h0-PI/2)/PI)+1;
     for(let k=kmin;k<=kmax;k++){
-      const x=h0+(PI/2+k*PI)/B;
+      const x=(h0+PI/2+k*PI)/B;
       if(x>xmin&&x<xmax){ctx.beginPath();ctx.moveTo(X(x),0);ctx.lineTo(X(x),h);ctx.stroke();}
     }
     ctx.setLineDash([]);
@@ -523,11 +465,12 @@
     $('#Hout').textContent=piFrac(state.h);
     $('#Dout').textContent=n(state.D,2);
     const fname=state.fn;
-    const inner = state.B===1 ? `(x${state.h===0?'':(state.h>0?` - ${piFrac(state.h)}`:` + ${piFrac(-state.h)}`)})` :
-      `${n(state.B,2)}(x${state.h===0?'':(state.h>0?` - ${piFrac(state.h)}`:` + ${piFrac(-state.h)}`)})`;
+    const bx = state.B===1 ? 'x' : `${n(state.B,2)}x`;
+    const shift = state.h===0 ? '' : (state.h>0 ? ` - ${piFrac(state.h)}` : ` + ${piFrac(-state.h)}`);
+    const inner = `(${bx}${shift})`;
     const a = state.A===1?'':state.A===-1?'-':`${n(state.A,2)}·`;
     const d = state.D===0?'':state.D>0?` + ${n(state.D,2)}`:` - ${n(-state.D,2)}`;
-    $('#formula').innerHTML=`y = ${a}${fname} ${inner}${d}<small>標準型：y = A·f(B(x-h)) + D</small>`;
+    $('#formula').innerHTML=`y = ${a}${fname}${inner}${d}<small>本頁用：y = A·f(Bx - h) + D</small>`;
     const p=$('#props'); p.innerHTML='';
     const add=(k,v)=>{const d=document.createElement('div');d.className='prop';d.innerHTML=`<b>${k}</b><span>${v}</span>`;p.appendChild(d);};
     if(fname==='tan'){
@@ -540,7 +483,8 @@
       const amp=Math.abs(state.A), period=2*PI/Math.abs(state.B);
       add('振幅',n(amp,2)); add('週期',piFrac(period));
       add('最大值',n(state.D+amp,2)); add('最小值',n(state.D-amp,2));
-      $('#conceptNote').innerHTML=`目前振幅為 <b>${n(amp,2)}</b>，週期為 <b>${piFrac(period)}</b>。請試著只動一個滑桿，觀察是哪一種幾何變化。`;
+      const dir = state.h===0 ? '不做左右平移' : (state.h>0 ? `先向右移 ${piFrac(state.h)}` : `先向左移 ${piFrac(-state.h)}`);
+      $('#conceptNote').innerHTML=`可以照這個順序想：<b>${dir}</b>，再上下平移、鉛直伸縮，最後做水平伸縮。現在振幅是 <b>${n(amp,2)}</b>，週期是 <b>${piFrac(period)}</b>。`;
     }
     $$('.seg button').forEach(b=>b.classList.toggle('active',b.dataset.fn===state.fn));
     drawMain(); drawStep();
@@ -560,7 +504,7 @@
     const p=b.dataset.preset;
     if(p==='shift') setState({fn:'sin',A:1,B:1,h:3*PI/4,D:1});
     if(p==='stretch') setState({fn:'sin',A:2,B:2,h:0,D:0});
-    if(p==='general') setState({fn:'sin',A:3,B:2,h:-PI/3,D:1});
+    if(p==='general') setState({fn:'sin',A:3,B:2,h:-2*PI/3,D:1});
   }));
   $$('[data-range]').forEach(b=>b.addEventListener('click',()=>{state.range=b.dataset.range;drawMain();}));
   $('#toggleBase').addEventListener('click',e=>{
@@ -569,11 +513,11 @@
 
   // Transformation steps
   const stepTexts=[
-    ['基本圖形 y = f(x)','先熟悉基本形狀。sin 與 cos 的週期是 2π；tan 的週期是 π。'],
-    ['加入 A：y = A·f(x)','A 改變鉛直方向的伸縮。對 sin、cos，振幅變成 |A|；A 為負時，還會對 x 軸翻轉。'],
-    ['再加入 B：y = A·f(Bx)','B 改變水平方向的伸縮。B 越大，圖形越密、週期越短。'],
-    ['再加入 h：y = A·f(B(x-h))','h 控制左右平移：h>0 向右，h<0 向左。請注意括號內的符號與移動方向相反。'],
-    ['最後加入 D：y = A·f(B(x-h))+D','D 控制上下平移，同時也把中心線從 y=0 移到 y=D。']
+    ['基本圖形 y = f(x)','先看清楚 sin、cos、tan 原本的形狀，再開始動它。'],
+    ['第 1 步：左右平移 y = f(x - h)','h > 0 向右移，h < 0 向左移。先只觀察圖形整體往左或往右移動。'],
+    ['第 2 步：上下平移 y = f(x - h) + D','D > 0 向上移，D < 0 向下移。波形的形狀先保持不變。'],
+    ['第 3 步：鉛直伸縮 y = A·f(x - h) + D','A 改變圖形相對中心線 y = D 的高矮。對 sin、cos，振幅變成 |A|；A < 0 時上下翻轉。'],
+    ['第 4 步：水平伸縮 y = A·f(Bx - h) + D','最後改 B。B 越大，圖形左右越擠、週期越短。例：先右移 π 得 sin(x-π)，再左右壓縮成 1/2，就得到 sin(2x-π)。']
   ];
   function drawStep(){
     const c=$('#stepGraph'),{ctx,w,h}=setCanvasSize(c,.51);
@@ -581,7 +525,7 @@
     let span=state.fn==='tan'?5:Math.max(2.5,Math.abs(state.D)+Math.abs(state.A)+1);
     const ymin=-span,ymax=span;drawAxes(ctx,w,h,xmin,xmax,ymin,ymax,true);
     if(state.step>0) plot(ctx,w,h,xmin,xmax,ymin,ymax,x=>yAt(x,state.step-1),colors.base,2,true);
-    if(state.fn==='tan' && state.step>=3){
+    if(state.fn==='tan' && state.step>=4){
       const oldRange=state.range; state.range='one'; drawAsymptotes(ctx,w,h,xmin,xmax,ymin,ymax); state.range=oldRange;
     }
     plot(ctx,w,h,xmin,xmax,ymin,ymax,x=>yAt(x,state.step),colors.main,3,false);
@@ -711,21 +655,264 @@
   }
   ['interMode','interFn','K','interRange'].forEach(id=>$('#'+id).addEventListener(id==='K'?'input':'change',drawInter));
 
-  // Quiz
-  $('#checkQuiz').addEventListener('click',()=>{
-    let score=0,total=0;
-    $$('.quizq').forEach(q=>{
-      total++;const sel=$('input:checked',q),fb=$('.feedback',q);
-      if(!sel){fb.textContent='尚未作答';fb.className='feedback bad';return;}
-      const ok=sel.value===q.dataset.answer; if(ok)score++;
-      fb.textContent=ok?'✓ 正確':'✗ 再觀察圖形與公式的關係';fb.className='feedback '+(ok?'good':'bad');
-    });
-    $('#quizScore').textContent=`得分：${score} / ${total}`;
+  // Quiz：100 題題庫，每次隨機抽 5 題
+  function qTextPi(num, den=1){
+    if(num===0) return '0';
+    const sign=num<0?'-':'';
+    num=Math.abs(num);
+    if(den===1){
+      if(num===1) return sign+'π';
+      return sign+num+'π';
+    }
+    if(num===1) return sign+`π/${den}`;
+    return sign+`${num}π/${den}`;
+  }
+  function simplePeriod(fn,b){
+    const base=fn==='tan'?PI:2*PI;
+    return piFrac(base/Math.abs(b));
+  }
+  function fnLabel(fn){ return fn==='sin'?'sin':fn==='cos'?'cos':'tan'; }
+  function shuffled(arr){
+    const a=[...arr];
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+  function makeQuestion(question, correct, wrong, explain){
+    return { question, correct, wrong, explain };
+  }
+
+  const quizBank = [];
+
+  // 1–20：振幅與週期
+  {
+    const As=[1,2,3,4,5];
+    const Bs=[1,2,3,4];
+    let idx=0;
+    for(const A of As){
+      for(const B of Bs){
+        const fn=idx%2===0?'sin':'cos'; idx++;
+        const p=simplePeriod(fn,B);
+        const wrong1=`振幅 ${B}，週期 ${piFrac(2*PI/A)}`;
+        const wrong2=`振幅 ${A}，週期 ${piFrac(2*PI*B)}`;
+        quizBank.push(makeQuestion(
+          `y = ${A===1?'':A+' '}${fnLabel(fn)}(${B===1?'x':B+'x'}) 的振幅與週期為何？`,
+          `振幅 ${A}，週期 ${p}`,
+          [wrong1, wrong2],
+          `sin、cos 的振幅看 |A|，週期看 2π/|B|。所以振幅是 ${A}，週期是 ${p}。`
+        ));
+      }
+    }
+  }
+
+  // 21–40：最大值與最小值
+  {
+    const As=[1,2,3,4,5];
+    const Ds=[-2,-1,1,2];
+    let idx=0;
+    for(const A of As){
+      for(const D of Ds){
+        const fn=idx%2===0?'sin':'cos'; idx++;
+        const max=A+D, min=D-A;
+        const dText=D>0?` + ${D}`:` - ${Math.abs(D)}`;
+        quizBank.push(makeQuestion(
+          `y = ${A===1?'':A+' '}${fnLabel(fn)} x${dText} 的最大值、最小值為何？`,
+          `最大值 ${max}，最小值 ${min}`,
+          [
+            `最大值 ${A}，最小值 ${-A}`,
+            `最大值 ${A-D}，最小值 ${-A-D}`
+          ],
+          `中心線是 y=${D}，振幅是 ${A}，所以最大值 = ${D}+${A}=${max}，最小值 = ${D}-${A}=${min}。`
+        ));
+      }
+    }
+  }
+
+  // 41–60：左右、上下平移
+  {
+    const hs=[
+      {n:1,d:6,t:'π/6'},{n:1,d:4,t:'π/4'},{n:1,d:3,t:'π/3'},
+      {n:1,d:2,t:'π/2'},{n:2,d:3,t:'2π/3'}
+    ];
+    const Ds=[-2,-1,1,2];
+    let idx=0;
+    for(const h of hs){
+      for(const D of Ds){
+        const fn=idx%2===0?'sin':'cos'; idx++;
+        const right=idx%3!==0;
+        const inside=right?`x - ${h.t}`:`x + ${h.t}`;
+        const vertical=D>0?` + ${D}`:` - ${Math.abs(D)}`;
+        const moveX=right?`向右移 ${h.t}`:`向左移 ${h.t}`;
+        const wrongX=right?`向左移 ${h.t}`:`向右移 ${h.t}`;
+        const moveY=D>0?`向上移 ${D}`:`向下移 ${Math.abs(D)}`;
+        const wrongY=D>0?`向下移 ${D}`:`向上移 ${Math.abs(D)}`;
+        quizBank.push(makeQuestion(
+          `y = ${fnLabel(fn)}(${inside})${vertical} 是由 y = ${fnLabel(fn)} x 如何平移得到？`,
+          `${moveX}，再${moveY}`,
+          [
+            `${wrongX}，再${moveY}`,
+            `${moveX}，再${wrongY}`
+          ],
+          `括號內 x-${h.t} 表示右移，x+${h.t} 表示左移；函數外的 ${D>0?'+':'-'}${Math.abs(D)} 決定上下平移。`
+        ));
+      }
+    }
+  }
+
+  // 61–80：先平移，再做水平伸縮（採展開式 Bx-h）
+  {
+    const Bs=[2,3,4,0.5];
+    const hs=[
+      {v:PI/2,t:'π/2'},{v:PI,t:'π'},{v:3*PI/2,t:'3π/2'},{v:2*PI,t:'2π'},{v:PI/3,t:'π/3'}
+    ];
+    let idx=0;
+    for(const B of Bs){
+      for(const h of hs){
+        const fn=idx%2===0?'sin':'cos'; idx++;
+        const bx=B===0.5?'x/2':`${B}x`;
+        const scale=B===0.5?'左右拉長為原來的 2 倍':`左右壓縮為原來的 1/${B}`;
+        const wrongScale=B===0.5?'左右壓縮為原來的 1/2':`左右拉長為原來的 ${B} 倍`;
+        quizBank.push(makeQuestion(
+          `依本頁的操作順序，y = ${fnLabel(fn)}(${bx} - ${h.t}) 可以怎麼從 y = ${fnLabel(fn)} x 得到？`,
+          `先向右移 ${h.t}，再${scale}`,
+          [
+            `先向左移 ${h.t}，再${scale}`,
+            `先向右移 ${h.t}，再${wrongScale}`
+          ],
+          `先把基本圖形改成 ${fnLabel(fn)}(x-${h.t})，再做水平伸縮。把 x 換成 ${bx}，就得到 ${fnLabel(fn)}(${bx}-${h.t})。`
+        ));
+      }
+    }
+  }
+
+  // 81–85：tan 的週期
+  [
+    [0.5,'x/2'],[1,'x'],[2,'2x'],[3,'3x'],[4,'4x']
+  ].forEach(([B,bx])=>{
+    const p=simplePeriod('tan',B);
+    quizBank.push(makeQuestion(
+      `y = tan(${bx}) 的週期為何？`,
+      p,
+      [piFrac(2*PI/B), piFrac(PI*B)],
+      `tan x 的基本週期是 π，所以 tan(Bx) 的週期是 π/|B| = ${p}。`
+    ));
   });
-  $('#clearQuiz').addEventListener('click',()=>{
-    $$('#quizBox input[type=radio]').forEach(x=>x.checked=false);
-    $$('.feedback').forEach(x=>{x.textContent='';x.className='feedback';});
+
+  // 86–90：tan 的定義域 / 漸近線概念
+  [
+    ['tan x','x = π/2 + kπ'],
+    ['tan(2x)','2x = π/2 + kπ'],
+    ['tan(3x)','3x = π/2 + kπ'],
+    ['tan(x - π/3)','x - π/3 = π/2 + kπ'],
+    ['tan(x + π/4)','x + π/4 = π/2 + kπ']
+  ].forEach(([expr,cond],i)=>{
+    quizBank.push(makeQuestion(
+      `函數 y = ${expr} 在哪一類位置會沒有定義？`,
+      `當 ${cond}（k 為整數）`,
+      [
+        `當 ${cond.replace('π/2','π')}（k 為整數）`,
+        `只有 x = 0 時`
+      ],
+      `tan θ = sin θ / cos θ；當 cos θ = 0，也就是 θ = π/2 + kπ 時，tan θ 沒有定義。`
+    ));
+  });
+
+  // 91–95：基本性質
+  [
+    makeQuestion('下列何者正確描述 y = sin x？','圖形對稱於原點',['圖形對稱於 y 軸','值域是 y ≥ 0'],'sin(-x)=-sin x，所以 y=sin x 是奇函數，圖形對稱於原點。'),
+    makeQuestion('下列何者正確描述 y = cos x？','圖形對稱於 y 軸',['圖形對稱於原點','週期是 π'],'cos(-x)=cos x，所以 y=cos x 是偶函數，圖形對稱於 y 軸。'),
+    makeQuestion('y = sin x 的值域為何？','-1 ≤ y ≤ 1',['0 ≤ y ≤ 1','全體實數 ℝ'],'正弦函數的最大值是 1、最小值是 -1。'),
+    makeQuestion('y = cos x 的定義域為何？','全體實數 ℝ',['-1 ≤ x ≤ 1','x ≠ π/2 + kπ'],'對任意實數 x，cos x 都有定義。'),
+    makeQuestion('y = tan x 的值域為何？','全體實數 ℝ',['-1 ≤ y ≤ 1','y ≥ 0'],'正切函數在每個週期內可由負無限延伸到正無限，因此值域是全體實數。')
+  ].forEach(q=>quizBank.push(q));
+
+  // 96–100：圖形關係與週期觀念
+  [
+    makeQuestion('哪一個函數的圖形與 y = cos x 完全相同？','y = sin(x + π/2)',['y = sin(x - π/2)','y = sin x + π/2'],'cos x = sin(x+π/2)，所以兩者圖形完全相同。'),
+    makeQuestion('y = sin(x + 3π/4) 可以由 y = sin x 如何平移得到？','向左移 3π/4',['向右移 3π/4','向上移 3π/4'],'x+3π/4 = x-(-3π/4)，所以圖形向左移 3π/4。'),
+    makeQuestion('若 y = sin(Bx) 的週期是 π，且 B>0，則 B 為何？','2',['1','π'],'sin(Bx) 的週期是 2π/B。令 2π/B=π，可得 B=2。'),
+    makeQuestion('若 y = tan(Bx) 的週期是 π/3，且 B>0，則 B 為何？','3',['2','6'],'tan(Bx) 的週期是 π/B。令 π/B=π/3，可得 B=3。'),
+    makeQuestion('對 y = 3 sin(2x - π) + 1，下列哪一項正確？','振幅 3，週期 π，中心線 y=1',['振幅 2，週期 3π，中心線 y=1','振幅 3，週期 2π，中心線 y=-1'],'振幅看 |A|=3；週期為 2π/2=π；外面的 +1 把中心線移到 y=1。')
+  ].forEach(q=>quizBank.push(q));
+
+  if(quizBank.length!==100){
+    console.error('Quiz bank size error:',quizBank.length);
+  }
+
+  let currentQuiz = [];
+  let lastQuizIds = [];
+
+  function pickFiveQuestions(){
+    const ids=quizBank.map((_,i)=>i);
+    let picked;
+    do{
+      picked=shuffled(ids).slice(0,5);
+    }while(lastQuizIds.length===5 && picked.every((id,i)=>id===lastQuizIds[i]));
+    lastQuizIds=[...picked];
+    return picked.map(id=>({id,...quizBank[id]}));
+  }
+
+  function renderQuiz(){
+    currentQuiz=pickFiveQuestions();
+    const box=$('#quizQuestions');
+    box.innerHTML='';
+    currentQuiz.forEach((q,qi)=>{
+      const item=document.createElement('div');
+      item.className='quizq';
+      item.dataset.qid=q.id;
+      const answers=shuffled([
+        {text:q.correct,correct:true},
+        ...q.wrong.map(text=>({text,correct:false}))
+      ]);
+      item.innerHTML=`<b>Q${qi+1}. ${q.question}</b><div class="options"></div><div class="feedback"></div>`;
+      const opts=$('.options',item);
+      answers.forEach((ans,ai)=>{
+        const label=document.createElement('label');
+        const input=document.createElement('input');
+        input.type='radio';
+        input.name=`quiz_${qi}`;
+        input.value=ans.correct?'1':'0';
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(' '+ans.text));
+        opts.appendChild(label);
+      });
+      box.appendChild(item);
+    });
     $('#quizScore').textContent='';
+  }
+
+  $('#checkQuiz').addEventListener('click',()=>{
+    let score=0;
+    $$('.quizq','#quizQuestions').forEach((item,qi)=>{
+      const sel=$('input:checked',item);
+      const fb=$('.feedback',item);
+      const q=currentQuiz[qi];
+      if(!sel){
+        fb.textContent='尚未作答';
+        fb.className='feedback bad';
+        return;
+      }
+      const ok=sel.value==='1';
+      if(ok) score++;
+      fb.innerHTML=ok
+        ?`✓ 正確　<span style="font-weight:500">${q.explain}</span>`
+        :`✗ 正確答案：${q.correct}<br><span style="font-weight:500">${q.explain}</span>`;
+      fb.className='feedback '+(ok?'good':'bad');
+    });
+    $('#quizScore').textContent=`得分：${score} / 5`;
+  });
+
+  $('#clearQuiz').addEventListener('click',()=>{
+    $$('#quizQuestions input[type=radio]').forEach(x=>x.checked=false);
+    $$('.feedback','#quizQuestions').forEach(x=>{x.textContent='';x.className='feedback';});
+    $('#quizScore').textContent='';
+  });
+
+  $('#newQuiz').addEventListener('click',()=>{
+    renderQuiz();
+    $('#quiz').scrollIntoView({behavior:'smooth',block:'start'});
   });
 
   // resize
@@ -735,7 +922,7 @@
     resizeTimer=setTimeout(()=>{drawMain();drawStep();drawCircle();drawInter();},120);
   });
 
-  updateUI(); drawCircle(); drawInter();
+  updateUI(); drawCircle(); drawInter(); renderQuiz();
 })();
 </script>
 </body>
