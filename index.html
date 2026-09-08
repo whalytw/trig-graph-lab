@@ -41,8 +41,17 @@
     .seg button.active{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);color:var(--accent)}
     .control{border-top:1px solid var(--line);padding-top:11px}
     .control:first-of-type{border-top:0}
-    .control label{display:flex;justify-content:space-between;gap:10px;font-weight:700}
+    .control label{display:flex;justify-content:space-between;gap:10px;font-weight:700;align-items:center}
     .control output{color:var(--accent);font-variant-numeric:tabular-nums}
+    .control-readout{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}
+    .change-tag{display:inline-flex;align-items:center;min-height:28px;padding:2px 9px;border-radius:999px;background:var(--soft2);border:1px solid #efc894;color:#8a4d16;font-size:13px;font-weight:800;white-space:nowrap}
+    .slider-input-row{display:grid;grid-template-columns:minmax(0,1fr) 142px;gap:10px;align-items:center}
+    .manual-input{width:100%;border:1px solid #b8c7d3;border-radius:9px;padding:7px 9px;background:#fff;color:var(--ink);font-size:14px}
+    .manual-input:focus{outline:2px solid rgba(15,111,131,.22);border-color:var(--accent)}
+    .manual-input.invalid{border-color:var(--bad);background:#fff5f5}
+    .pi-hint{font-size:13px;color:var(--muted);background:#f7fafc;border:1px dashed var(--line);border-radius:10px;padding:8px 10px}
+    .pi-hint b{color:var(--accent)}
+    @media (max-width:560px){.slider-input-row{grid-template-columns:1fr 112px}}
     input[type=range]{width:100%;accent-color:var(--accent)}
     select,.selectlike{width:100%;border:1px solid #b9c9d6;border-radius:10px;padding:9px 10px;background:white;color:var(--ink)}
     .formula{background:#122e49;color:white;border-radius:14px;padding:12px 14px;font-size:20px;text-align:center;overflow-wrap:anywhere}
@@ -137,32 +146,58 @@
 
           <div class="formula" id="formula">y = sin x<small>本頁用：y = A·f(Bx - h) + D</small></div>
 
+          <div class="pi-hint">可用滑桿，也可以直接在右側輸入數值；<b>輸入框不受滑桿範圍限制</b>。<b>pi = π</b>，例如可輸入 <b>pi/2</b>、<b>-pi/3</b>、<b>8*pi</b>。</div>
+
           <div class="control">
-            <label for="H">h：先左右平移 <output id="Hout">0</output></label>
-            <input id="H" type="range" min="-6.283" max="6.283" step="0.262" value="0" />
+            <label for="H">
+              <span>h：左右平移</span>
+              <span class="control-readout"><output id="Hout">0</output><span class="change-tag" id="Hchange">不平移</span></span>
+            </label>
+            <div class="slider-input-row">
+              <input id="H" type="range" min="-18.8495559215" max="18.8495559215" step="0.2617993878" value="0" />
+              <input id="Hinput" class="manual-input" type="text" value="0" inputmode="text" aria-label="左右平移 h 直接輸入值，pi 代表 π" title="可輸入 pi/2、-pi/3、2*pi 等" />
+            </div>
           </div>
           <div class="control">
-            <label for="D">D：上下平移 <output id="Dout">0</output></label>
-            <input id="D" type="range" min="-4" max="4" step="0.25" value="0" />
+            <label for="B">
+              <span>B：左右伸縮</span>
+              <span class="control-readout"><output id="Bout">1</output><span class="change-tag" id="Bchange">不伸縮</span></span>
+            </label>
+            <div class="slider-input-row">
+              <input id="B" type="range" min="0.25" max="4" step="0.25" value="1" />
+              <input id="Binput" class="manual-input" type="text" value="1" inputmode="text" aria-label="左右伸縮 B 直接輸入值，pi 代表 π" title="可輸入數字、分數或 pi，例如 1/2、pi" />
+            </div>
           </div>
           <div class="control">
-            <label for="A">A：鉛直伸縮 <output id="Aout">1</output></label>
-            <input id="A" type="range" min="-4" max="4" step="0.25" value="1" />
+            <label for="A">
+              <span>A：上下伸縮</span>
+              <span class="control-readout"><output id="Aout">1</output><span class="change-tag" id="Achange">不伸縮</span></span>
+            </label>
+            <div class="slider-input-row">
+              <input id="A" type="range" min="-4" max="4" step="0.25" value="1" />
+              <input id="Ainput" class="manual-input" type="text" value="1" inputmode="text" aria-label="上下伸縮 A 直接輸入值，pi 代表 π" title="可輸入數字、分數或 pi，例如 -2、1/2、pi" />
+            </div>
           </div>
           <div class="control">
-            <label for="B">B：水平伸縮 <output id="Bout">1</output></label>
-            <input id="B" type="range" min="0.25" max="4" step="0.25" value="1" />
+            <label for="D">
+              <span>D：上下平移</span>
+              <span class="control-readout"><output id="Dout">0</output><span class="change-tag" id="Dchange">不平移</span></span>
+            </label>
+            <div class="slider-input-row">
+              <input id="D" type="range" min="-4" max="4" step="0.25" value="0" />
+              <input id="Dinput" class="manual-input" type="text" value="0" inputmode="text" aria-label="上下平移 D 直接輸入值，pi 代表 π" title="可輸入數字、分數或 pi，例如 -1、pi/2" />
+            </div>
           </div>
 
           <div class="toolbar">
             <button class="btn primary" type="button" id="resetBtn">回到基本圖形</button>
-            <button class="btn" type="button" data-preset="shift">平移例</button>
-            <button class="btn" type="button" data-preset="stretch">伸縮例</button>
-            <button class="btn" type="button" data-preset="general">綜合例</button>
+            <button class="btn" type="button" data-preset="shift" title="每按一次隨機產生一個平移例">平移例 🎲</button>
+            <button class="btn" type="button" data-preset="stretch" title="每按一次隨機產生一個伸縮例">伸縮例 🎲</button>
+            <button class="btn" type="button" data-preset="general" title="每按一次隨機產生一個綜合例">綜合例 🎲</button>
           </div>
 
           <div class="props" id="props" aria-live="polite"></div>
-          <div class="learnnote" id="conceptNote">試著照順序操作：先改 h、D 看平移，再改 A、B 看伸縮。像 y = sin(2x - π)，可以想成先把 y = sin x 向右移 π，再把圖形左右壓縮成原來的 1/2。</div>
+          <div class="learnnote" id="conceptNote">建議照順序操作：①左右平移 → ②左右伸縮 → ③上下伸縮 → ④上下平移。滑桿方便觀察；輸入框可輸入更大的數值，不受滑桿範圍限制。輸入 pi 就代表 π。</div>
         </div>
 
         <div>
@@ -184,14 +219,14 @@
     </section>
 
     <section id="transform">
-      <div class="section-title"><h2>2. 變換拆解</h2><span>照順序按按看：先平移，再伸縮</span></div>
+      <div class="section-title"><h2>2. 變換拆解</h2><span>照順序按按看：左右平移 → 左右伸縮 → 上下伸縮 → 上下平移</span></div>
       <div class="card">
         <div class="steps" id="stepButtons">
           <button class="stepbtn active" type="button" data-step="0">0 基本圖形</button>
           <button class="stepbtn" type="button" data-step="1">1 左右平移</button>
-          <button class="stepbtn" type="button" data-step="2">2 上下平移</button>
-          <button class="stepbtn" type="button" data-step="3">3 鉛直伸縮</button>
-          <button class="stepbtn" type="button" data-step="4">4 水平伸縮</button>
+          <button class="stepbtn" type="button" data-step="2">2 左右伸縮</button>
+          <button class="stepbtn" type="button" data-step="3">3 上下伸縮</button>
+          <button class="stepbtn" type="button" data-step="4">4 上下平移</button>
         </div>
         <div class="grid2even">
           <div class="canvasbox"><canvas id="stepGraph" width="700" height="360" aria-label="函數變換分解圖"></canvas></div>
@@ -199,9 +234,9 @@
             <h3 id="stepTitle" style="margin-top:0">基本圖形 y = f(x)</h3>
             <p id="stepExplain">先熟悉 y=sin x、y=cos x 或 y=tan x 的原始形狀，再逐步加入參數。</p>
             <div class="learnnote">
-              <b>操作口訣：</b><br>
-              h 看「左右」；D 看「上下」；A 看「高矮」；B 看「疏密」。<br>
-              例如 <b>y = sin(2x - π)</b>：先右移 π，再左右壓縮成 1/2。<br>
+              <b>操作順序：</b><br>
+              h 看「左右平移」→ B 看「左右伸縮」→ A 看「上下伸縮」→ D 看「上下平移」。<br>
+              例如 <b>y = sin(2x - π)</b>：先右移 π，再左右壓縮成原來的 1/2。<br>
               對 sin、cos 而言，週期是 <b>2π / |B|</b>；對 tan 而言，週期是 <b>π / |B|</b>。
             </div>
           </div>
@@ -325,14 +360,117 @@
     const {fn,A,B,h,D}=state;
     if(step===0) return f(fn,x);
     if(step===1) return f(fn,x-h);
-    if(step===2) return f(fn,x-h)+D;
-    if(step===3) return A*f(fn,x-h)+D;
+    if(step===2) return f(fn,B*x-h);
+    if(step===3) return A*f(fn,B*x-h);
     return A*f(fn,B*x-h)+D;
   }
   function n(v, digits=2){
     if(!Number.isFinite(v)) return '未定義';
     if(Math.abs(v)<1e-10) v=0;
     return Number(v.toFixed(digits)).toString();
+  }
+  function parseMathInput(raw){
+    let s=String(raw ?? '').trim().toLowerCase();
+    if(!s) return NaN;
+    s=s.replace(/π/g,'pi').replace(/[×·]/g,'*').replace(/\s+/g,'');
+    // 允許 2pi、3.5pi 這種省略乘號的寫法
+    s=s.replace(/(\d|\.)pi/g,'$1*pi');
+    const tokens=s.match(/pi|(?:\d+(?:\.\d*)?|\.\d+)|[+\-*/]/g);
+    if(!tokens || tokens.join('')!==s) return NaN;
+    let pos=0;
+    function factor(){
+      let sign=1;
+      while(tokens[pos]==='+' || tokens[pos]==='-'){
+        if(tokens[pos]==='-') sign*=-1;
+        pos++;
+      }
+      const t=tokens[pos++];
+      if(t==='pi') return sign*PI;
+      if(t && /^(?:\d+(?:\.\d*)?|\.\d+)$/.test(t)) return sign*Number(t);
+      return NaN;
+    }
+    function term(){
+      let v=factor();
+      while(tokens[pos]==='*' || tokens[pos]==='/'){
+        const op=tokens[pos++], rhs=factor();
+        if(!Number.isFinite(v) || !Number.isFinite(rhs) || (op==='/' && Math.abs(rhs)<1e-14)) return NaN;
+        v=op==='*' ? v*rhs : v/rhs;
+      }
+      return v;
+    }
+    function expression(){
+      let v=term();
+      while(tokens[pos]==='+' || tokens[pos]==='-'){
+        const op=tokens[pos++], rhs=term();
+        if(!Number.isFinite(v) || !Number.isFinite(rhs)) return NaN;
+        v=op==='+' ? v+rhs : v-rhs;
+      }
+      return v;
+    }
+    const value=expression();
+    return pos===tokens.length && Number.isFinite(value) ? value : NaN;
+  }
+
+  function inputTextFor(key,value){
+    if(key==='h'){
+      return piFrac(value).replaceAll('π','pi');
+    }
+    return n(value,4);
+  }
+
+  function setManualValidity(input,ok,message=''){
+    input.classList.toggle('invalid',!ok);
+    input.setCustomValidity(ok?'':message);
+    input.title=ok ? (input.dataset.defaultTitle || input.title) : message;
+  }
+
+  function simpleFraction(v){
+    if(Math.abs(v)<1e-10) return '0';
+    const sign=v<0?'-':'';
+    v=Math.abs(v);
+    let best={err:1e9,num:0,den:1};
+    for(let den=1;den<=16;den++){
+      const num=Math.round(v*den);
+      const err=Math.abs(v-num/den);
+      if(err<best.err) best={err,num,den};
+    }
+    if(best.err<1e-7){
+      const gcd=(a,b)=>{while(b){[a,b]=[b,a%b]}return a||1};
+      const g=gcd(best.num,best.den);
+      const num=best.num/g, den=best.den/g;
+      return den===1?`${sign}${num}`:`${sign}${num}/${den}`;
+    }
+    return `${sign}${n(v,2)}`;
+  }
+
+  function horizontalChange(B){
+    if(Math.abs(B-1)<1e-10) return '不伸縮';
+    if(Math.abs(B)<1e-10) return 'B=0（圖形不再隨 x 週期變化）';
+    const factor=1/Math.abs(B);
+    let msg=Math.abs(B)>1 ? `左右縮為 ${simpleFraction(factor)} 倍` : `左右伸為 ${simpleFraction(factor)} 倍`;
+    if(B<0) msg += '；再左右翻轉';
+    return msg;
+  }
+
+  function verticalChange(A){
+    if(Math.abs(A-1)<1e-10) return '不伸縮';
+    if(Math.abs(A)<1e-10) return '上下縮為 0（成中心線）';
+    const mag=Math.abs(A);
+    let scale='';
+    if(Math.abs(mag-1)<1e-10) scale='大小不變';
+    else if(mag>1) scale=`上下伸為 ${simpleFraction(mag)} 倍`;
+    else scale=`上下縮為 ${simpleFraction(mag)} 倍`;
+    return A<0 ? `上下翻轉；${scale}` : scale;
+  }
+
+  function horizontalShiftChange(h){
+    if(Math.abs(h)<1e-8) return '不平移';
+    return h>0 ? `右移 ${piFrac(h)}` : `左移 ${piFrac(-h)}`;
+  }
+
+  function verticalShiftChange(D){
+    if(Math.abs(D)<1e-10) return '不平移';
+    return D>0 ? `上移 ${simpleFraction(D)}` : `下移 ${simpleFraction(-D)}`;
   }
   function piFrac(x){
     if(Math.abs(x)<1e-5) return '0';
@@ -440,8 +578,11 @@
     const X=x=>(x-xmin)/(xmax-xmin)*w;
     ctx.strokeStyle=colors.accent;ctx.setLineDash([5,5]);ctx.lineWidth=1.3;
     const B=state.B,h0=state.h;
-    const kmin=Math.floor((B*xmin-h0-PI/2)/PI)-1;
-    const kmax=Math.ceil((B*xmax-h0-PI/2)/PI)+1;
+    if(Math.abs(B)<1e-12){ctx.setLineDash([]);return;}
+    const ka=(B*xmin-h0-PI/2)/PI;
+    const kb=(B*xmax-h0-PI/2)/PI;
+    const kmin=Math.floor(Math.min(ka,kb))-1;
+    const kmax=Math.ceil(Math.max(ka,kb))+1;
     for(let k=kmin;k<=kmax;k++){
       const x=(h0+PI/2+k*PI)/B;
       if(x>xmin&&x<xmax){ctx.beginPath();ctx.moveTo(X(x),0);ctx.lineTo(X(x),h);ctx.stroke();}
@@ -464,6 +605,15 @@
     $('#Bout').textContent=n(state.B,2);
     $('#Hout').textContent=piFrac(state.h);
     $('#Dout').textContent=n(state.D,2);
+    $('#Hchange').textContent=horizontalShiftChange(state.h);
+    $('#Bchange').textContent=horizontalChange(state.B);
+    $('#Achange').textContent=verticalChange(state.A);
+    $('#Dchange').textContent=verticalShiftChange(state.D);
+    $('#Hinput').value=inputTextFor('h',state.h);
+    $('#Binput').value=inputTextFor('B',state.B);
+    $('#Ainput').value=inputTextFor('A',state.A);
+    $('#Dinput').value=inputTextFor('D',state.D);
+    ['Hinput','Binput','Ainput','Dinput'].forEach(id=>$('#'+id).classList.remove('invalid'));
     const fname=state.fn;
     const bx = state.B===1 ? 'x' : `${n(state.B,2)}x`;
     const shift = state.h===0 ? '' : (state.h>0 ? ` - ${piFrac(state.h)}` : ` + ${piFrac(-state.h)}`);
@@ -474,17 +624,28 @@
     const p=$('#props'); p.innerHTML='';
     const add=(k,v)=>{const d=document.createElement('div');d.className='prop';d.innerHTML=`<b>${k}</b><span>${v}</span>`;p.appendChild(d);};
     if(fname==='tan'){
-      add('週期',piFrac(PI/Math.abs(state.B)));
+      add('週期',Math.abs(state.B)<1e-12?'無週期（B=0）':piFrac(PI/Math.abs(state.B)));
       add('值域','全體實數 ℝ');
       add('振幅','不適用');
       add('中心線',`y = ${n(state.D,2)}`);
-      $('#conceptNote').innerHTML='正切函數沒有最大值、最小值，也沒有振幅；最重要的是 <b>週期</b> 與 <b>垂直漸近線</b>。當角度接近 π/2 + kπ 時，tan 值會急遽增大或減小。';
+      const steps=[
+        horizontalShiftChange(state.h),
+        horizontalChange(state.B),
+        verticalChange(state.A),
+        verticalShiftChange(state.D)
+      ];
+      $('#conceptNote').innerHTML=`目前的變化順序：<b>${steps.join(' → ')}</b>。<br>正切函數沒有最大值、最小值，也沒有振幅；請特別觀察週期與垂直漸近線。`;
     } else {
-      const amp=Math.abs(state.A), period=2*PI/Math.abs(state.B);
-      add('振幅',n(amp,2)); add('週期',piFrac(period));
+      const amp=Math.abs(state.A), period=Math.abs(state.B)<1e-12?null:2*PI/Math.abs(state.B);
+      add('振幅',n(amp,2)); add('週期',period===null?'無週期（B=0）':piFrac(period));
       add('最大值',n(state.D+amp,2)); add('最小值',n(state.D-amp,2));
-      const dir = state.h===0 ? '不做左右平移' : (state.h>0 ? `先向右移 ${piFrac(state.h)}` : `先向左移 ${piFrac(-state.h)}`);
-      $('#conceptNote').innerHTML=`可以照這個順序想：<b>${dir}</b>，再上下平移、鉛直伸縮，最後做水平伸縮。現在振幅是 <b>${n(amp,2)}</b>，週期是 <b>${piFrac(period)}</b>。`;
+      const steps=[
+        horizontalShiftChange(state.h),
+        horizontalChange(state.B),
+        verticalChange(state.A),
+        verticalShiftChange(state.D)
+      ];
+      $('#conceptNote').innerHTML=`目前的變化順序：<b>${steps.join(' → ')}</b>。<br>現在振幅是 <b>${n(amp,2)}</b>，週期是 <b>${period===null?'無週期（B=0）':piFrac(period)}</b>。`;
     }
     $$('.seg button').forEach(b=>b.classList.toggle('active',b.dataset.fn===state.fn));
     drawMain(); drawStep();
@@ -499,12 +660,81 @@
   [['A','A'],['B','B'],['H','h'],['D','D']].forEach(([id,key])=>{
     $('#'+id).addEventListener('input',e=>{state[key]=Number(e.target.value);updateUI();});
   });
+
+  const manualSpecs={
+    Hinput:{key:'h',range:'H',label:'h'},
+    Binput:{key:'B',range:'B',label:'B'},
+    Ainput:{key:'A',range:'A',label:'A'},
+    Dinput:{key:'D',range:'D',label:'D'}
+  };
+  Object.entries(manualSpecs).forEach(([id,spec])=>{
+    const input=$('#'+id);
+    input.dataset.defaultTitle=input.title;
+    const commit=()=>{
+      const value=parseMathInput(input.value);
+      if(!Number.isFinite(value)){
+        setManualValidity(input,false,'請輸入數字、分數或 pi，例如 pi/2、-pi/3、1/2。');
+        return false;
+      }
+      setManualValidity(input,true);
+      state[spec.key]=value;
+      $('#'+spec.range).value=value;
+      updateUI();
+      return true;
+    };
+    input.addEventListener('change',commit);
+    input.addEventListener('keydown',e=>{
+      if(e.key==='Enter'){
+        e.preventDefault();
+        if(commit()) input.blur();
+      }
+    });
+    input.addEventListener('input',()=>{
+      input.classList.remove('invalid');
+      input.setCustomValidity('');
+    });
+  });
+
   $('#resetBtn').addEventListener('click',()=>setState({A:1,B:1,h:0,D:0}));
+  function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+  function randomNonZero(arr){let v=0;while(Math.abs(v)<1e-12)v=pick(arr);return v;}
+  const shiftPool=[
+    -2*PI,-3*PI/2,-PI,-3*PI/4,-2*PI/3,-PI/2,-PI/3,-PI/4,
+     PI/4, PI/3, PI/2, 2*PI/3, 3*PI/4, PI, 3*PI/2, 2*PI
+  ];
+  const verticalShiftPool=[-3,-2,-1,1,2,3];
+  const stretchAPool=[-3,-2,-1.5,-0.5,0.5,1.5,2,3];
+  const stretchBPool=[0.5,0.75,1.5,2,2.5,3,4];
+
   $$('[data-preset]').forEach(b=>b.addEventListener('click',()=>{
     const p=b.dataset.preset;
-    if(p==='shift') setState({fn:'sin',A:1,B:1,h:3*PI/4,D:1});
-    if(p==='stretch') setState({fn:'sin',A:2,B:2,h:0,D:0});
-    if(p==='general') setState({fn:'sin',A:3,B:2,h:-2*PI/3,D:1});
+    if(p==='shift'){
+      // 只做平移：A、B 回到 1；h、D 每次隨機。
+      setState({
+        A:1,
+        B:1,
+        h:pick(shiftPool),
+        D:pick(verticalShiftPool)
+      });
+    }
+    if(p==='stretch'){
+      // 只做伸縮：h、D 回到 0；A、B 每次隨機。
+      setState({
+        A:pick(stretchAPool),
+        B:pick(stretchBPool),
+        h:0,
+        D:0
+      });
+    }
+    if(p==='general'){
+      // 四個參數一起隨機，保留目前學生選擇的 sin / cos / tan。
+      setState({
+        A:pick(stretchAPool),
+        B:pick(stretchBPool),
+        h:pick(shiftPool),
+        D:pick(verticalShiftPool)
+      });
+    }
   }));
   $$('[data-range]').forEach(b=>b.addEventListener('click',()=>{state.range=b.dataset.range;drawMain();}));
   $('#toggleBase').addEventListener('click',e=>{
@@ -514,10 +744,10 @@
   // Transformation steps
   const stepTexts=[
     ['基本圖形 y = f(x)','先看清楚 sin、cos、tan 原本的形狀，再開始動它。'],
-    ['第 1 步：左右平移 y = f(x - h)','h > 0 向右移，h < 0 向左移。先只觀察圖形整體往左或往右移動。'],
-    ['第 2 步：上下平移 y = f(x - h) + D','D > 0 向上移，D < 0 向下移。波形的形狀先保持不變。'],
-    ['第 3 步：鉛直伸縮 y = A·f(x - h) + D','A 改變圖形相對中心線 y = D 的高矮。對 sin、cos，振幅變成 |A|；A < 0 時上下翻轉。'],
-    ['第 4 步：水平伸縮 y = A·f(Bx - h) + D','最後改 B。B 越大，圖形左右越擠、週期越短。例：先右移 π 得 sin(x-π)，再左右壓縮成 1/2，就得到 sin(2x-π)。']
+    ['第 1 步：左右平移 y = f(x - h)','h > 0 向右移，h < 0 向左移。例如 h=π/2 時，就是右移 π/2。'],
+    ['第 2 步：左右伸縮 y = f(Bx - h)','B > 1 時左右壓縮為原來的 1/B；0<B<1 時左右拉長為原來的 1/B。'],
+    ['第 3 步：上下伸縮 y = A·f(Bx - h)','|A| 改變圖形上下的伸縮倍率；A<0 時還會上下翻轉。'],
+    ['第 4 步：上下平移 y = A·f(Bx - h) + D','D > 0 向上移，D < 0 向下移。最後把整條圖形一起往上或往下移。']
   ];
   function drawStep(){
     const c=$('#stepGraph'),{ctx,w,h}=setCanvasSize(c,.51);
@@ -525,7 +755,7 @@
     let span=state.fn==='tan'?5:Math.max(2.5,Math.abs(state.D)+Math.abs(state.A)+1);
     const ymin=-span,ymax=span;drawAxes(ctx,w,h,xmin,xmax,ymin,ymax,true);
     if(state.step>0) plot(ctx,w,h,xmin,xmax,ymin,ymax,x=>yAt(x,state.step-1),colors.base,2,true);
-    if(state.fn==='tan' && state.step>=4){
+    if(state.fn==='tan' && state.step>=2){
       const oldRange=state.range; state.range='one'; drawAsymptotes(ctx,w,h,xmin,xmax,ymin,ymax); state.range=oldRange;
     }
     plot(ctx,w,h,xmin,xmax,ymin,ymax,x=>yAt(x,state.step),colors.main,3,false);
